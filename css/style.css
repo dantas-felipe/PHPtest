@@ -1,0 +1,30 @@
+.wrapper {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+}
+.main {
+  flex: 1;
+}
+
+.header-logo{
+    background-color: #023d75;
+}
+
+.logo{
+  width: 200px;
+}
+.hero-body {
+  padding: 1rem;
+}
+.section {
+  padding: 1.5rem;
+}
+#output {
+  padding: 1rem 0; 
+}
+
+.footer {
+  padding: .8rem;
+}
+
