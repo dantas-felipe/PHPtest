@@ -8,5 +8,5 @@ Teste de seleção para vaga PHP
   
   ● Bulma.
   
-  ● JavaScript.
+  ● JavaScript
   
