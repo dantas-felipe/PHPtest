@@ -10,3 +10,7 @@ Teste de seleção para vaga PHP
   
   ● JavaScript
   
+  ● HTML
+  
+  ● CSS
+  
