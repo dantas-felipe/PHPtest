@@ -1,4 +1,9 @@
 
+<?php
+require_once 'controle-cep.php';
+$date = new ControleCep("CD2tec", "localhost", "root", "");
+
+?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -34,14 +39,15 @@
     <!--FORM-->
     <section class="section">
       <div class="container">
-        <form id="search" method="get">
+        <form id="search" method="post">
           <div class="field">
             <div class="control has-icons-left has-icons-right">
-              <input id="zipcode" name="zipcode" class="input is-hovered is-large" type="text" placeholder="Digite o CEP" maxlength="9" autocomplete="off" tabindex="1" autofocus required>
-              <p class="help has-text-grey">Exemplo: 01001-001</p>
+              <input id="zipcode" name="zipcode" class="input is-hovered is-large" type="text" placeholder="Digite o CEP" maxlength="8" autocomplete="off" tabindex="1" autofocus required>
+              <p class="help has-text-grey">Exemplo: 01001001</p>
               <span class="icon is-small is-left">
                 <i class="fa fa-map-pin"></i>
               </span>
+              
             </div>
           </div>
         </form>
@@ -50,21 +56,43 @@
       <!--PHP-->
       <?php
 
-          $address=(object)[
-            'cep' => '',
-            'logradouro' =>'',
-            'complemento' =>'',
-            'bairro' =>'',
-            'localidade' =>'',
-            'uf' =>'',
-            'ddd' =>''
-          ];
+          if (isset ($_POST['zipcode'])){
+          $cep = addslashes($_POST['zipcode']);
+          $teste = $date->getCep($cep);
+          if(!empty($teste)){
 
-          if (isset ($_GET['zipcode'])){
-          $cep = addslashes($_GET['zipcode']);
-          $url = "https://viacep.com.br/ws/${cep}/xml/";
+            ?>
+            <script>alert("Pesquisou no BD")</script> 
+            <?php
+            $cep= $teste['cep'];
+            $logradouro=$teste['rua'];
+            $complemento=$teste['complemento'];
+            $bairro=$teste['bairro'];
+            $localidade=$teste['cidade'];
+            $uf=$teste['estado'];
+            $ddd=$teste['ddd'];
 
-          $address = simplexml_load_file($url);  
+          }else{
+
+            $url = "https://viacep.com.br/ws/${cep}/xml/";
+
+            $address = simplexml_load_file($url); 
+                        
+            $cep= $address->cep;
+            $logradouro= $address->logradouro;
+            $complemento= $address->complemento;
+            $bairro= $address->bairro;
+            $localidade= $address->localidade;
+            $uf= $address->uf;
+            $ddd= $address->ddd;
+            
+            // $date->addCep($bairro, $sono, $localidade, $complemento, $ddd, $uf, $logradouro);
+
+            ?>
+            <script>alert("Pesquisou na API")</script> 
+            <?php
+          }
+          
           }
           
      ?>      
@@ -73,22 +101,20 @@
         <h3>Último CEP pesquisado</h3>
         <article class="message">
           <div class="message-header">
-            <p>CEP: <strong><?php echo $address->cep ?></strong></p>
-            <!--<button class="delete" aria-label="delete"></button>-->
+            <p>CEP: <strong><?php echo $cep ?></strong></p>
+            
           </div>
           
           <div id="result-body" class="message-body">
             <ul>
-              <li><strong>CEP: </strong><?php echo $address->cep ?></li>
-              <li><strong>Rua: </strong><?php echo $address->logradouro ?></li>
-              <li><strong>Complemento: </strong><?php echo $address->complemento ?></li>
-              <li><strong>Bairro: </strong><?php echo $address->bairro ?></li>
-              <li><strong>Cidade: </strong><?php echo $address->localidade ?></li>
-              <li><strong>Estado: </strong><?php echo $address->uf ?></li>
-              <li><strong>DDD: </strong><?php echo $address->ddd ?></li>
+              <li><strong>Rua: </strong><?php echo $logradouro ?></li>
+              <li><strong>Complemento: </strong><?php echo $complemento ?></li>
+              <li><strong>Bairro: </strong><?php echo $bairro ?></li>
+              <li><strong>Cidade: </strong><?php echo $localidade ?></li>
+              <li><strong>Estado: </strong><?php echo $uf ?></li>
+              <li><strong>DDD: </strong><?php echo $ddd ?></li>
             </ul>
           </div>
-
         </article>
       </div>
     </section>
@@ -102,7 +128,7 @@
     </div>
   </footer>
 
-  <script src="https://unpkg.com/vanilla-masker@1.2.0/build/vanilla-masker.min.js"></script>
+  <!-- <script src="https://unpkg.com/vanilla-masker@1.2.0/build/vanilla-masker.min.js"></script> -->
   <script src="./js/app.js"></script>
 </body>
 </html>

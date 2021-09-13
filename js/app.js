@@ -5,7 +5,7 @@ const $result = document.querySelector('#result-body');
 const $box = document.getElementsByClassName('message');
 
 // Apply mask
-VMasker($zipcode).maskPattern("99999-999");
+// VMasker($zipcode).maskPattern("99999-999");
 
 // Listen for button close output
 document.querySelector("body").addEventListener("click", closeOutput);
